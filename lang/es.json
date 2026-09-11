@@ -1,0 +1,20 @@
+{
+    "Welcome": "Bienvenido",
+    "Log in": "Iniciar sesión",
+    "Register": "Registrarse",
+    "Reset password": "Restablecer contraseña",
+    "Forgot password": "¿Olvidaste tu contraseña?",
+    "Email address": "Correo electrónico",
+    "Password": "Contraseña",
+    "Remember me": "Recordarme",
+    "Name": "Nombre",
+    "Full name": "Nombre completo",
+    "Confirm password": "Confirmar contraseña",
+    "Already have an account?": "¿Ya tienes una cuenta?",
+    "Don't have an account?": "¿No tienes una cuenta?",
+    "Sign up": "Regístrate",
+    "Create account": "Crear cuenta",
+    "Log in to your account": "Inicia sesión en tu cuenta",
+    "Enter your details below to create your account": "Ingresa tus datos para crear tu cuenta",
+    "Enter your email and password below to log in": "Ingresa tu correo y contraseña para iniciar sesión"
+}

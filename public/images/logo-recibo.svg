@@ -1,0 +1,6 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="4" y="4" width="120" height="120" rx="18" fill="#0F172A"/>
+  <rect x="10" y="10" width="108" height="108" rx="14" stroke="#D4AF37" stroke-width="2"/>
+  <text x="64" y="58" text-anchor="middle" fill="#F8FAFC" font-size="26" font-family="serif" font-weight="700">OJ</text>
+  <text x="64" y="82" text-anchor="middle" fill="#D4AF37" font-size="12" font-family="serif">ALVARO CALDERON</text>
+</svg>
