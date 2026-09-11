@@ -2,7 +2,7 @@
     <div class="mx-auto w-full max-w-7xl p-4 md:p-6">
         <div class="mb-6 rounded-2xl border border-zinc-200 bg-linear-to-r from-zinc-900 to-slate-800 p-6 text-white shadow-sm dark:border-zinc-700">
             <p class="text-xs uppercase tracking-[0.2em] text-amber-200">Panel principal</p>
-            <h1 class="mt-2 text-2xl font-semibold">OFICINA JURIDICA ALVARO CALDERON S.</h1>
+            <h1 class="mt-2 text-2xl font-semibold">OFICINA JURIDICA Lic. ALVARO CALDERON S.</h1>
             <p class="mt-2 text-sm text-zinc-200">Sistema simple de recibos listo para imprimir.</p>
             <div class="mt-4 flex flex-wrap gap-3">
                 <a href="{{ route('receipts.create') }}" class="rounded-lg bg-amber-400 px-4 py-2 text-sm font-semibold text-zinc-900 hover:bg-amber-300">Nuevo recibo</a>

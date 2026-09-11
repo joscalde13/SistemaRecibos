@@ -248,7 +248,7 @@
                 @endif
             </div>
             <div class="header-info">
-                <div class="office-name">{{ $officeSetting?->office_name ?: 'OFICINA JURIDICA ALVARO CALDERON S.' }}</div>
+                <div class="office-name">OFICINA JURIDICA LIC. ALVARO CALDERON S.</div>
                 <div class="meta">{{ $officeSetting?->office_address ?: '12 calle 5-1 zona 1, Tiquisate, Escuintla' }}</div>
                 <div class="meta">{{ $officeSetting?->office_phone ?: '7884-7778' }}{{ $officeSetting?->office_email ? ' | '.$officeSetting->office_email : '' }}</div>
             </div>
