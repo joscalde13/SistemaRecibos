@@ -4,133 +4,201 @@
     <meta charset="UTF-8">
     <title>Recibo {{ $receipt->receipt_number }}</title>
     <style>
-        @page { margin: 22px; }
-        body {
-            font-family: DejaVu Sans, sans-serif;
-            color: #111827;
-            font-size: 11px;
+        @page {
             margin: 0;
         }
+        html, body {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            color: #1a1a1a;
+            font-size: 11px;
+        }
+
+        /* Página = mitad del alto de la hoja carta, pero más ancho horizontalmente */
         .page {
-            width: 52%;
-            min-height: 420px;
+            width: 92%;
+            max-width: 1100px;
+            height: 5.8in;
+            box-sizing: border-box;
+            padding: 0.28in 0.45in;
+            position: relative;
             margin: 0 auto;
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 18px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
         }
-        .topbar {
-            height: 7px;
-            background: linear-gradient(90deg, #0f172a 0%, #374151 100%);
+
+        /* Línea guía de corte al final de la mitad de hoja */
+        .cut-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-top: 1px dashed #c9c9c9;
         }
-        .wrap { padding: 18px 20px 16px 20px; }
+
         .header {
             display: table;
             width: 100%;
-            border-bottom: 1px solid #e5e7eb;
-            padding-bottom: 12px;
+            border-bottom: 1px solid #1a1a1a;
+            padding-bottom: 10px;
             margin-bottom: 14px;
         }
-        .left { display: table-cell; width: 62px; vertical-align: middle; }
-        .right { display: table-cell; vertical-align: middle; }
+        .header-logo { display: table-cell; width: 60px; vertical-align: middle; }
+        .header-info { display: table-cell; vertical-align: middle; padding-left: 12px; }
+        .header-doc { display: table-cell; vertical-align: middle; text-align: right; width: 160px; }
+
         .logo-placeholder {
-            width: 52px;
-            height: 52px;
-            border: 1px solid #d4af37;
-            border-radius: 12px;
+            width: 48px;
+            height: 48px;
+            border: 1px solid #1a1a1a;
             text-align: center;
-            line-height: 52px;
+            line-height: 48px;
             font-weight: 700;
-            background: linear-gradient(135deg, #f8f4ea 0%, #fdfaf1 100%);
-            color: #7c5a1d;
+            font-size: 13px;
+            color: #1a1a1a;
         }
+
         .office-name {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 700;
             letter-spacing: 0.2px;
-            color: #111827;
         }
-        .meta { color: #4b5563; font-size: 10px; margin-top: 2px; }
+        .meta {
+            color: #555555;
+            font-size: 9.5px;
+            margin-top: 2px;
+        }
+
         .title {
-            display: inline-block;
-            margin-top: 8px;
-            padding: 4px 10px;
-            background: #f8fafc;
-            border: 1px solid #e5e7eb;
-            color: #374151;
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 700;
-            letter-spacing: 1.2px;
+            letter-spacing: 1.5px;
             text-transform: uppercase;
+            color: #1a1a1a;
         }
-        .amount-box {
-            margin-top: 8px;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 12px 14px;
-            color: #111827;
-            font-size: 26px;
+        .receipt-number {
+            font-size: 13px;
             font-weight: 700;
-            text-align: center;
+            margin-top: 3px;
+        }
+        .receipt-date {
+            font-size: 9.5px;
+            color: #555555;
+            margin-top: 2px;
+        }
+
+        .amount-row {
+            display: table;
+            width: 100%;
+            margin: 16px 0 14px 0;
         }
         .amount-label {
+            display: table-cell;
             font-size: 9px;
-            color: #6b7280;
+            color: #555555;
             text-transform: uppercase;
             letter-spacing: 1.2px;
-            margin-bottom: 6px;
+            vertical-align: bottom;
+            padding-bottom: 4px;
         }
-        .grid { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .grid td { padding: 4px 0; vertical-align: top; }
-        .label { color: #475569; display: inline-block; width: 120px; font-size: 10px; }
-        .box {
-            margin-top: 10px;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 8px 10px;
-            background: #fafafa;
+        .amount-value {
+            display: table-cell;
+            text-align: right;
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
+
+        .fields {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 4px;
+        }
+        .fields td {
+            padding: 3px 0;
+            vertical-align: top;
+            font-size: 10.5px;
+        }
+        .fields .label {
+            color: #555555;
+            display: inline-block;
+            width: 90px;
+        }
+
         .money {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 6px 6px;
-            margin-top: 12px;
+            border-collapse: collapse;
+            margin-top: 14px;
+            border-top: 1px solid #1a1a1a;
+            border-bottom: 1px solid #1a1a1a;
         }
         .money td {
-            background: #f8fafc;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 8px 10px;
+            padding: 8px 4px;
             width: 33.333%;
         }
+        .money td + td {
+            border-left: 1px solid #dddddd;
+        }
         .k {
-            color: #64748b;
+            color: #555555;
             font-size: 9px;
             text-transform: uppercase;
             letter-spacing: 0.8px;
             display: block;
-            margin-bottom: 2px;
+            margin-bottom: 3px;
         }
         .v {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 700;
         }
-        .signature {
-            margin-top: 26px;
-            text-align: center;
-        }
-        .line {
-            border-top: 1px solid #111827;
-            width: 170px;
-            margin: 8px auto 8px auto;
-        }
+
         .note {
             margin-top: 10px;
-            color: #6b7280;
+            font-size: 9.5px;
+            color: #555555;
+        }
+        .note strong { color: #1a1a1a; }
+
+        .footer-row {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 52px;
+            min-height: 150px;
+            position: relative;
+        }
+        .footer-left {
+            flex: 1;
+            align-self: flex-end;
             font-size: 9px;
+            color: #888888;
+            padding-right: 18px;
+        }
+        .footer-signature {
+            width: 240px;
+            text-align: center;
+            align-self: flex-end;
+            margin: 0 auto;
+            padding-top: 32px;
+            padding-bottom: 0;
+        }
+        .signature-img {
+            height: 60px;
+            display: block;
+            margin: 0 auto 12px auto;
+        }
+        .line {
+            border-top: 1px solid #1a1a1a;
+            width: 190px;
+            margin: 0 auto 10px auto;
+        }
+        .sig-label {
+            font-size: 9px;
+            color: #555555;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
     </style>
 </head>
@@ -169,71 +237,73 @@
     @endphp
 
     <div class="page">
-        <div class="topbar"></div>
-        <div class="wrap">
-            <div class="header" style="display: block; border-bottom: none; padding-bottom: 6px; margin-bottom: 8px;">
-                <div style="text-align: center; margin-bottom: 10px;">
-                    @if($officeSetting?->logo_path && file_exists(public_path('storage/'.$officeSetting->logo_path)))
-                        <img src="{{ public_path('storage/'.$officeSetting->logo_path) }}" alt="Logo" style="height: 64px; width: auto; max-width: 140px; object-fit: contain; border-radius: 10px; display: block; margin: 0 auto;">
-                    @elseif($staticLogoPath)
-                        <img src="{{ $staticLogoPath }}" alt="Logo" style="height: 64px; width: auto; max-width: 140px; object-fit: contain; border-radius: 10px; display: block; margin: 0 auto;">
-                    @else
-                        <div class="logo-placeholder" style="margin: 0 auto;">OJ</div>
-                    @endif
-                </div>
-                <div style="text-align: center;">
-                    <div class="office-name">{{ $officeSetting?->office_name ?: 'OFICINA JURIDICA ALVARO CALDERON S.' }}</div>
-                    <div class="meta">{{ $officeSetting?->office_address ?: '12 calle 5-1 zona 1, Tiquisate, Escuintla' }}</div>
-                    <div class="meta">{{ $officeSetting?->office_phone ?: '78855919' }}{{ $officeSetting?->office_email ? ' | '.$officeSetting->office_email : '' }}</div>
-                    <div class="title">RECIBO DE PAGO</div>
-                </div>
+        <div class="header">
+            <div class="header-logo">
+                @if($officeSetting?->logo_path && file_exists(public_path('storage/'.$officeSetting->logo_path)))
+                    <img src="{{ public_path('storage/'.$officeSetting->logo_path) }}" alt="Logo" style="height: 48px; width: auto; max-width: 60px; object-fit: contain;">
+                @elseif($staticLogoPath)
+                    <img src="{{ $staticLogoPath }}" alt="Logo" style="height: 48px; width: auto; max-width: 60px; object-fit: contain;">
+                @else
+                    <div class="logo-placeholder">OJ</div>
+                @endif
             </div>
+            <div class="header-info">
+                <div class="office-name">{{ $officeSetting?->office_name ?: 'OFICINA JURIDICA ALVARO CALDERON S.' }}</div>
+                <div class="meta">{{ $officeSetting?->office_address ?: '12 calle 5-1 zona 1, Tiquisate, Escuintla' }}</div>
+                <div class="meta">{{ $officeSetting?->office_phone ?: '7884-7778' }}{{ $officeSetting?->office_email ? ' | '.$officeSetting->office_email : '' }}</div>
+            </div>
+            <div class="header-doc">
+                <div class="title">Recibo de pago</div>
+                <div class="receipt-number">{{ $receipt->receipt_number }}</div>
+                <div class="receipt-date">{{ $receipt->issue_date?->format('d/m/Y') }}</div>
+            </div>
+        </div>
 
+        <div class="amount-row">
             <div class="amount-label">Monto</div>
-            <div class="amount-box">Q{{ number_format((float) $receipt->total_amount, 2) }}</div>
+            <div class="amount-value">Q{{ number_format((float) $receipt->total_amount, 2) }}</div>
+        </div>
 
-            <table class="grid">
-                <tr>
-                    <td><span class="label">Recibo:</span> <strong>{{ $receipt->receipt_number }}</strong></td>
-                    <td style="text-align: right;"><span class="label">Fecha:</span> <strong>{{ $receipt->issue_date?->format('d/m/Y') }}</strong></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><span class="label">Cliente:</span> <strong>{{ $receipt->person->full_name }}</strong></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><span class="label">Cantidad:</span> <strong>{{ $amountInWords }}</strong></td>
-                </tr>
-                <tr>
-                    <td colspan="2"><span class="label">Concepto:</span> <strong>{{ $receipt->concept }}</strong></td>
-                </tr>
-            </table>
+        <table class="fields">
+            <tr>
+                <td colspan="2"><span class="label">Cliente:</span> <strong>{{ $receipt->person->full_name }}</strong></td>
+            </tr>
+            <tr>
+                <td colspan="2"><span class="label">Cantidad:</span> {{ $amountInWords }}</td>
+            </tr>
+            <tr>
+                <td colspan="2"><span class="label">Concepto:</span> {{ $receipt->concept }}</td>
+            </tr>
+        </table>
 
-            <table class="money">
-                <tr>
-                    <td><span class="k">Debe</span><span class="v">Q{{ number_format((float) $receipt->total_amount, 2) }}</span></td>
-                    <td><span class="k">Abono</span><span class="v">Q{{ number_format((float) $paidAmount, 2) }}</span></td>
-                    <td><span class="k">Saldo</span><span class="v">Q{{ number_format((float) $saldoAmount, 2) }}</span></td>
-                </tr>
-            </table>
+        <table class="money">
+            <tr>
+                <td><span class="k">Debe</span><span class="v">Q{{ number_format((float) $receipt->total_amount, 2) }}</span></td>
+                <td><span class="k">Abono</span><span class="v">Q{{ number_format((float) $paidAmount, 2) }}</span></td>
+                <td><span class="k">Saldo</span><span class="v">Q{{ number_format((float) $saldoAmount, 2) }}</span></td>
+            </tr>
+        </table>
 
-            @if($receipt->notes)
-                <div class="box">
-                    <strong>Nota:</strong> {{ $receipt->notes }}
-                </div>
-            @endif
+        @if($receipt->notes)
+            <div class="note"><strong>Nota:</strong> {{ $receipt->notes }}</div>
+        @endif
 
-            <div class="signature">
+        <div class="footer-row">
+            <div class="footer-left">
+                @if($officeSetting?->receipt_footer)
+                    {{ $officeSetting->receipt_footer }}
+                @endif
+            </div>
+            <div class="footer-signature">
                 @if($officeSetting?->show_signature && $officeSetting?->signature_path && file_exists(public_path('storage/'.$officeSetting->signature_path)))
-                    <img src="{{ public_path('storage/'.$officeSetting->signature_path) }}" alt="Firma" style="height: 58px; display: block; margin: 0 auto;">
+                    <img src="{{ public_path('storage/'.$officeSetting->signature_path) }}" alt="Firma" class="signature-img">
                 @endif
                 <div class="line"></div>
-                <div><strong>Firma</strong></div>
+                <div class="sig-label">Firma</div>
             </div>
-
-            @if($officeSetting?->receipt_footer)
-                <p class="note" style="margin-top: 16px;">{{ $officeSetting->receipt_footer }}</p>
-            @endif
         </div>
+
+        
     </div>
 </body>
 </html>
