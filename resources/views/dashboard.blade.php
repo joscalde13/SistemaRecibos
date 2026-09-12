@@ -10,35 +10,41 @@
             </div>
         </div>
 
-        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
-            <div class="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
-                <p class="text-xs uppercase text-zinc-500">Recibos emitidos</p>
-                <p class="mt-2 text-3xl font-bold text-zinc-900 dark:text-zinc-100">{{ number_format($totalReceipts) }}</p>
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
+            <div class="min-w-0 overflow-hidden rounded-xl border border-zinc-200 bg-white p-3 shadow-sm sm:p-4 dark:border-zinc-700 dark:bg-zinc-900">
+                <p class="text-[10px] font-medium uppercase tracking-wide text-zinc-500 sm:text-xs">Recibos emitidos</p>
+                <p class="mt-2 text-2xl font-bold leading-tight text-zinc-900 sm:text-3xl dark:text-zinc-100">{{ number_format($totalReceipts) }}</p>
             </div>
-            <div class="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
-                <p class="text-xs uppercase text-zinc-500">Total en recibos</p>
-                <p class="mt-2 text-3xl font-bold text-zinc-900 dark:text-zinc-100">Q{{ number_format($totalAmount, 2) }}</p>
+            <div class="min-w-0 overflow-hidden rounded-xl border border-zinc-200 bg-white p-3 shadow-sm sm:p-4 dark:border-zinc-700 dark:bg-zinc-900">
+                <p class="text-[10px] font-medium uppercase tracking-wide text-zinc-500 sm:text-xs">Total en recibos</p>
+                <p class="mt-2 text-2xl font-bold leading-tight text-zinc-900 sm:text-3xl dark:text-zinc-100">Q{{ number_format($totalAmount, 2) }}</p>
             </div>
-            <div class="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
-                <p class="text-xs uppercase text-zinc-500">Total recibido</p>
-                <p class="mt-2 text-3xl font-bold text-zinc-900 dark:text-zinc-100">Q{{ number_format($totalReceived, 2) }}</p>
+            <div class="min-w-0 overflow-hidden rounded-xl border border-zinc-200 bg-white p-3 shadow-sm sm:p-4 dark:border-zinc-700 dark:bg-zinc-900">
+                <p class="text-[10px] font-medium uppercase tracking-wide text-zinc-500 sm:text-xs">Total recibido</p>
+                <p class="mt-2 text-2xl font-bold leading-tight text-zinc-900 sm:text-3xl dark:text-zinc-100">Q{{ number_format($totalReceived, 2) }}</p>
             </div>
-            <div class="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
-                <p class="text-xs uppercase text-zinc-500">Total pendiente</p>
-                <p class="mt-2 text-3xl font-bold text-zinc-900 dark:text-zinc-100">Q{{ number_format($totalPending, 2) }}</p>
+            <div class="min-w-0 overflow-hidden rounded-xl border border-zinc-200 bg-white p-3 shadow-sm sm:p-4 dark:border-zinc-700 dark:bg-zinc-900">
+                <p class="text-[10px] font-medium uppercase tracking-wide text-zinc-500 sm:text-xs">Total pendiente</p>
+                <p class="mt-2 text-2xl font-bold leading-tight text-zinc-900 sm:text-3xl dark:text-zinc-100">Q{{ number_format($totalPending, 2) }}</p>
             </div>
-            <div class="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
-                <p class="text-xs uppercase text-zinc-500">Personas con deuda</p>
-                <p class="mt-2 text-3xl font-bold text-zinc-900 dark:text-zinc-100">{{ number_format($peopleWithDebt) }}</p>
+            <div class="min-w-0 overflow-hidden rounded-xl border border-zinc-200 bg-white p-3 shadow-sm sm:p-4 dark:border-zinc-700 dark:bg-zinc-900">
+                <p class="text-[10px] font-medium uppercase tracking-wide text-zinc-500 sm:text-xs">Personas con deuda</p>
+                <p class="mt-2 text-2xl font-bold leading-tight text-zinc-900 sm:text-3xl dark:text-zinc-100">{{ number_format($peopleWithDebt) }}</p>
             </div>
-            <div class="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
-                <p class="text-xs uppercase text-zinc-500">Mayor adeudo</p>
-                @if($topDebtor)
-                    <p class="mt-2 text-lg font-bold text-zinc-900 dark:text-zinc-100">{{ Str::limit($topDebtor->full_name, 18) }}</p>
-                    <p class="text-sm text-zinc-500">Q{{ number_format($topDebtAmount, 2) }}</p>
+
+            <div class="min-w-0 overflow-hidden rounded-xl border border-zinc-200 bg-white p-3 shadow-sm sm:p-4 dark:border-zinc-700 dark:bg-zinc-900 sm:col-span-2 xl:col-span-5">
+                <p class="text-[10px] font-medium uppercase tracking-wide text-zinc-500 sm:text-xs">Personas que deben</p>
+                @if($debtors->isNotEmpty())
+                    <div class="mt-3 space-y-2">
+                        @foreach($debtors as $debtor)
+                            <div class="flex items-center justify-between gap-2 rounded-lg bg-zinc-50 px-2 py-1.5 text-xs text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
+                                <span class="truncate font-medium">{{ $debtor->full_name }}</span>
+                                <span class="shrink-0 font-semibold text-amber-700 dark:text-amber-300">Q{{ number_format((float) $debtor->pending_amount, 2) }}</span>
+                            </div>
+                        @endforeach
+                    </div>
                 @else
-                    <p class="mt-2 text-lg font-bold text-zinc-900 dark:text-zinc-100">Sin deuda</p>
-                    <p class="text-sm text-zinc-500">Q0.00</p>
+                    <p class="mt-3 text-sm text-zinc-500">No hay personas con deuda.</p>
                 @endif
             </div>
         </div>

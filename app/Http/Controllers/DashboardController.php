@@ -20,19 +20,15 @@ class DashboardController extends Controller
             })
             ->count();
 
-        $personaMayorAdeudo = Person::query()
-            ->select('people.*')
-            ->selectSub(
-                Receipt::query()
-                    ->whereColumn('people.id', 'receipts.person_id')
-                    ->where('status', '!=', Receipt::STATUS_VOID)
-                    ->where('saldo_amount', '>', 0)
-                    ->selectRaw('SUM(saldo_amount)'),
-                'pending_amount'
-            )
-            ->orderByDesc('pending_amount')
+        $deudores = Person::query()
+            ->withSum(['receipts as pending_amount' => function ($query): void {
+                $query->where('status', '!=', Receipt::STATUS_VOID)
+                    ->where('saldo_amount', '>', 0);
+            }], 'saldo_amount')
             ->get()
-            ->first(fn (Person $person): bool => (float) ($person->pending_amount ?? 0) > 0);
+            ->filter(fn (Person $person): bool => (float) ($person->pending_amount ?? 0) > 0)
+            ->sortByDesc('pending_amount')
+            ->values();
 
         return view('dashboard', [
             'totalReceipts' => Receipt::count(),
@@ -40,8 +36,7 @@ class DashboardController extends Controller
             'totalReceived' => (float) $totalRecibido,
             'totalPending' => (float) $totalPendiente,
             'peopleWithDebt' => $personasConDeuda,
-            'topDebtor' => $personaMayorAdeudo,
-            'topDebtAmount' => $personaMayorAdeudo ? (float) $personaMayorAdeudo->pending_amount : 0,
+            'debtors' => $deudores,
             'recentReceipts' => Receipt::with('person')->latest('issue_date')->latest('id')->limit(8)->get(),
         ]);
     }
