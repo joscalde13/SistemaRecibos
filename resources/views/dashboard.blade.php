@@ -10,7 +10,7 @@
             </div>
         </div>
 
-        <div class="grid gap-4 md:grid-cols-3">
+        <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-6">
             <div class="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
                 <p class="text-xs uppercase text-zinc-500">Recibos emitidos</p>
                 <p class="mt-2 text-3xl font-bold text-zinc-900 dark:text-zinc-100">{{ number_format($totalReceipts) }}</p>
@@ -23,6 +23,24 @@
                 <p class="text-xs uppercase text-zinc-500">Total recibido</p>
                 <p class="mt-2 text-3xl font-bold text-zinc-900 dark:text-zinc-100">Q{{ number_format($totalReceived, 2) }}</p>
             </div>
+            <div class="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
+                <p class="text-xs uppercase text-zinc-500">Total pendiente</p>
+                <p class="mt-2 text-3xl font-bold text-zinc-900 dark:text-zinc-100">Q{{ number_format($totalPending, 2) }}</p>
+            </div>
+            <div class="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
+                <p class="text-xs uppercase text-zinc-500">Personas con deuda</p>
+                <p class="mt-2 text-3xl font-bold text-zinc-900 dark:text-zinc-100">{{ number_format($peopleWithDebt) }}</p>
+            </div>
+            <div class="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
+                <p class="text-xs uppercase text-zinc-500">Mayor adeudo</p>
+                @if($topDebtor)
+                    <p class="mt-2 text-lg font-bold text-zinc-900 dark:text-zinc-100">{{ Str::limit($topDebtor->full_name, 18) }}</p>
+                    <p class="text-sm text-zinc-500">Q{{ number_format($topDebtAmount, 2) }}</p>
+                @else
+                    <p class="mt-2 text-lg font-bold text-zinc-900 dark:text-zinc-100">Sin deuda</p>
+                    <p class="text-sm text-zinc-500">Q0.00</p>
+                @endif
+            </div>
         </div>
 
         <div class="mt-6">
@@ -32,20 +50,20 @@
                     <table class="min-w-full text-sm">
                         <thead>
                             <tr class="border-b border-zinc-200 text-left text-zinc-500 dark:border-zinc-700">
-                                <th class="py-2">Fecha</th>
-                                <th class="py-2">Persona</th>
-                                <th class="py-2">Monto</th>
+                                <th class="px-5 py-3">Fecha</th>
+                                <th class="px-5 py-3">Persona</th>
+                                <th class="px-5 py-3">Monto</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($recentReceipts as $receipt)
                                 <tr class="border-b border-zinc-100 dark:border-zinc-800">
-                                    <td class="py-2">{{ $receipt->issue_date?->format('d/m/Y') }}</td>
-                                    <td class="py-2">{{ $receipt->person?->full_name }}</td>
-                                    <td class="py-2">Q{{ number_format((float) $receipt->total_amount, 2) }}</td>
+                                    <td class="px-5 py-3 whitespace-nowrap">{{ $receipt->issue_date?->format('d/m/Y') }}</td>
+                                    <td class="px-5 py-3 whitespace-nowrap">{{ $receipt->person?->full_name }}</td>
+                                    <td class="px-5 py-3 whitespace-nowrap">Q{{ number_format((float) $receipt->total_amount, 2) }}</td>
                                 </tr>
                             @empty
-                                <tr><td class="py-2 text-zinc-500" colspan="3">Sin registros</td></tr>
+                                <tr><td class="px-5 py-3 text-zinc-500" colspan="3">Sin registros</td></tr>
                             @endforelse
                         </tbody>
                     </table>
