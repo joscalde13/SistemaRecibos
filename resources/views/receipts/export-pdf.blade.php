@@ -18,6 +18,7 @@
             <tr>
                 <th>Fecha</th>
                 <th>Nombre</th>
+                <th>Concepto</th>
                 <th>Monto</th>
                 <th>Debe</th>
                 <th>Abono</th>
@@ -34,6 +35,7 @@
                 <tr>
                     <td>{{ $receipt->issue_date?->format('d/m/Y') }}</td>
                     <td>{{ $receipt->person?->full_name }}</td>
+                    <td>{{ $receipt->concept ?? '' }}</td>
                     <td>Q{{ number_format((float) $receipt->total_amount, 2) }}</td>
                     <td>Q{{ number_format($debe, 2) }}</td>
                     <td>Q{{ number_format($paid, 2) }}</td>

@@ -32,7 +32,6 @@
                     <table class="min-w-full text-sm">
                         <thead>
                             <tr class="border-b border-zinc-200 text-left text-zinc-500 dark:border-zinc-700">
-                                <th class="py-2">Numero</th>
                                 <th class="py-2">Fecha</th>
                                 <th class="py-2">Persona</th>
                                 <th class="py-2">Monto</th>
@@ -41,13 +40,12 @@
                         <tbody>
                             @forelse($recentReceipts as $receipt)
                                 <tr class="border-b border-zinc-100 dark:border-zinc-800">
-                                    <td class="py-2"><a href="{{ route('receipts.show', $receipt) }}" class="font-medium text-slate-700 hover:underline dark:text-slate-300">{{ $receipt->receipt_number }}</a></td>
                                     <td class="py-2">{{ $receipt->issue_date?->format('d/m/Y') }}</td>
                                     <td class="py-2">{{ $receipt->person?->full_name }}</td>
                                     <td class="py-2">Q{{ number_format((float) $receipt->total_amount, 2) }}</td>
                                 </tr>
                             @empty
-                                <tr><td class="py-2 text-zinc-500" colspan="4">Sin registros</td></tr>
+                                <tr><td class="py-2 text-zinc-500" colspan="3">Sin registros</td></tr>
                             @endforelse
                         </tbody>
                     </table>

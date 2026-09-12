@@ -314,7 +314,7 @@ class ReceiptController extends Controller
 
         return response()->streamDownload(function () use ($receipts): void {
             $handle = fopen('php://output', 'wb');
-            fputcsv($handle, ['Fecha', 'Nombre', 'Monto', 'Debe', 'Abono', 'Saldo']);
+            fputcsv($handle, ['Fecha', 'Nombre', 'Concepto', 'Monto', 'Debe', 'Abono', 'Saldo']);
 
             foreach ($receipts as $receipt) {
                 $paid = (float) ($receipt->abono_amount ?? 0);
@@ -324,6 +324,7 @@ class ReceiptController extends Controller
                 fputcsv($handle, [
                     $receipt->issue_date?->format('d/m/Y') ?? '',
                     $receipt->person?->full_name ?? '',
+                    $receipt->concept ?? '',
                     number_format((float) $receipt->total_amount, 2, '.', ''),
                     number_format($debe, 2, '.', ''),
                     number_format($paid, 2, '.', ''),

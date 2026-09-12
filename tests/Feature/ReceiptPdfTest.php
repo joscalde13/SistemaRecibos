@@ -67,3 +67,61 @@ test('manual receipt values are stored and reflected in the index and pdf', func
         ->assertOk()
         ->assertSee('Q25.00');
 });
+
+test('receipt export csv includes the concept column', function () {
+    $user = User::factory()->create();
+    $person = Person::query()->create([
+        'full_name' => 'Luis Ramírez',
+        'registered_at' => now()->toDateString(),
+    ]);
+
+    Receipt::create([
+        'person_id' => $person->id,
+        'created_by' => $user->id,
+        'receipt_number' => 'REC-000003',
+        'issue_date' => now()->toDateString(),
+        'concept' => 'Honorarios legales',
+        'total_amount' => 250.00,
+        'abono_amount' => 0.00,
+        'saldo_amount' => 250.00,
+        'status' => Receipt::STATUS_PENDING,
+    ]);
+
+    $response = $this->actingAs($user)->get(route('receipts.export.excel'));
+
+    $response->assertOk();
+
+    ob_start();
+    $response->sendContent();
+    $content = ob_get_clean();
+
+    expect($content)
+        ->toContain('Concepto')
+        ->toContain('Honorarios legales');
+});
+
+test('receipt export pdf includes the concept column', function () {
+    $user = User::factory()->create();
+    $person = Person::query()->create([
+        'full_name' => 'Sofía Gómez',
+        'registered_at' => now()->toDateString(),
+    ]);
+
+    $receipt = Receipt::create([
+        'person_id' => $person->id,
+        'created_by' => $user->id,
+        'receipt_number' => 'REC-000004',
+        'issue_date' => now()->toDateString(),
+        'concept' => 'Pago de cuota',
+        'total_amount' => 500.00,
+        'abono_amount' => 100.00,
+        'saldo_amount' => 400.00,
+        'status' => Receipt::STATUS_PARTIAL,
+    ]);
+
+    $html = view('receipts.export-pdf', ['receipts' => [$receipt]])->render();
+
+    expect($html)
+        ->toContain('<th>Concepto</th>')
+        ->toContain('Pago de cuota');
+});
