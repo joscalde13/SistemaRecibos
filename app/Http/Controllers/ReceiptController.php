@@ -27,8 +27,6 @@ class ReceiptController extends Controller
     public function index(Request $request): View
     {
         $search = trim((string) $request->string('search'));
-        $from = $request->string('from')->toString();
-        $to = $request->string('to')->toString();
 
         $receipts = Receipt::query()
             ->with('person')
@@ -41,14 +39,12 @@ class ReceiptController extends Controller
                         });
                 });
             })
-            ->when($from !== '', fn ($query) => $query->whereDate('issue_date', '>=', $from))
-            ->when($to !== '', fn ($query) => $query->whereDate('issue_date', '<=', $to))
             ->latest('issue_date')
             ->latest('id')
             ->paginate(12)
             ->withQueryString();
 
-        return view('receipts.index', compact('receipts', 'search', 'from', 'to'));
+        return view('receipts.index', compact('receipts', 'search'));
     }
 
     public function create(): View
