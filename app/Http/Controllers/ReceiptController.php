@@ -365,6 +365,6 @@ class ReceiptController extends Controller
             'receipts' => $receipts,
         ])->setPaper('letter', 'landscape');
 
-        return $pdf->download('recibos-'.now()->format('Ymd-His').'.pdf');
+        return $pdf->download('reporte-de-recibos.pdf');
     }
 }
