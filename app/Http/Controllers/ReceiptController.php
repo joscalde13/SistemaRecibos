@@ -27,6 +27,7 @@ class ReceiptController extends Controller
     public function index(Request $request): View
     {
         $search = trim((string) $request->string('search'));
+        $month = trim((string) $request->string('month'));
 
         $receipts = Receipt::query()
             ->with('person')
@@ -39,12 +40,25 @@ class ReceiptController extends Controller
                         });
                 });
             })
+            ->when($month !== '', function ($query) use ($month): void {
+                $query->whereYear('issue_date', substr($month, 0, 4))
+                    ->whereMonth('issue_date', substr($month, 5, 2));
+            })
             ->latest('issue_date')
             ->latest('id')
             ->paginate(12)
             ->withQueryString();
 
-        return view('receipts.index', compact('receipts', 'search'));
+        $months = Receipt::query()
+            ->whereNotNull('issue_date')
+            ->orderByDesc('issue_date')
+            ->get(['issue_date'])
+            ->map(fn ($receipt) => $receipt->issue_date?->format('Y-m'))
+            ->filter()
+            ->unique()
+            ->values();
+
+        return view('receipts.index', compact('receipts', 'search', 'month', 'months'));
     }
 
     public function create(): View

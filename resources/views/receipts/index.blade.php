@@ -12,8 +12,18 @@
         </div>
 
         <form method="GET" class="mb-4 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
-            <div class="grid gap-3 md:grid-cols-[1fr_auto]">
+            <div class="grid gap-3 md:grid-cols-[1fr_220px_auto]">
                 <input name="search" value="{{ $search }}" placeholder="Nombre, número o concepto" class="rounded-lg border border-zinc-300 px-3 py-2 text-sm" />
+
+                <select name="month" class="rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-700">
+                    <option value="">Todos los meses</option>
+                    @foreach($months as $availableMonth)
+                        <option value="{{ $availableMonth }}" @selected($month === $availableMonth)>
+                            {{ \Carbon\Carbon::createFromFormat('Y-m', $availableMonth)->locale('es')->translatedFormat('F Y') }}
+                        </option>
+                    @endforeach
+                </select>
+
                 <button class="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-semibold text-white">Filtrar</button>
             </div>
         </form>

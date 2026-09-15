@@ -68,6 +68,49 @@ test('manual receipt values are stored and reflected in the index and pdf', func
         ->assertSee('Q25.00');
 });
 
+test('receipt index can filter records by selected month', function () {
+    $user = User::factory()->create();
+
+    $personA = Person::query()->create([
+        'full_name' => 'Carlos Mesa',
+        'registered_at' => '2025-01-15',
+    ]);
+    $personB = Person::query()->create([
+        'full_name' => 'Rosa Ramos',
+        'registered_at' => '2025-02-15',
+    ]);
+
+    Receipt::create([
+        'person_id' => $personA->id,
+        'created_by' => $user->id,
+        'receipt_number' => 'REC-000010',
+        'issue_date' => '2025-01-10',
+        'concept' => 'Servicio enero',
+        'total_amount' => 100.00,
+        'abono_amount' => 0.00,
+        'saldo_amount' => 100.00,
+        'status' => Receipt::STATUS_PENDING,
+    ]);
+
+    Receipt::create([
+        'person_id' => $personB->id,
+        'created_by' => $user->id,
+        'receipt_number' => 'REC-000011',
+        'issue_date' => '2025-02-10',
+        'concept' => 'Servicio febrero',
+        'total_amount' => 200.00,
+        'abono_amount' => 0.00,
+        'saldo_amount' => 200.00,
+        'status' => Receipt::STATUS_PENDING,
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('receipts.index', ['month' => '2025-01']))
+        ->assertOk()
+        ->assertSee('Carlos Mesa')
+        ->assertDontSee('Rosa Ramos');
+});
+
 test('receipt export csv includes the concept column', function () {
     $user = User::factory()->create();
     $person = Person::query()->create([
