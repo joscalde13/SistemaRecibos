@@ -260,8 +260,8 @@
         </div>
 
         <div class="amount-row">
-            <div class="amount-label">Debe</div>
-            <div class="amount-value">Q{{ number_format((float) $saldoAmount, 2) }}</div>
+            <div class="amount-label">Cantidad recibida</div>
+            <div class="amount-value">Q{{ number_format((float) $paidAmount, 2) }}</div>
         </div>
 
         <table class="fields">
@@ -278,7 +278,7 @@
 
         <table class="money">
             <tr>
-                <td><span class="k">Debe</span><span class="v">Q{{ number_format((float) $receipt->total_amount, 2) }}</span></td>
+                <td><span class="k">Cantidad recibida</span><span class="v">Q{{ number_format((float) $paidAmount, 2) }}</span></td>
                 <td><span class="k">Abono</span><span class="v">Q{{ number_format((float) $paidAmount, 2) }}</span></td>
                 <td><span class="k">Saldo</span><span class="v">Q{{ number_format((float) $saldoAmount, 2) }}</span></td>
             </tr>
