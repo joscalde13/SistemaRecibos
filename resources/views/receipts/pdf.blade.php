@@ -135,7 +135,7 @@
         }
         .money td {
             padding: 8px 4px;
-            width: 33.333%;
+            width: 25%;
         }
         .money td + td {
             border-left: 1px solid #dddddd;
@@ -278,7 +278,8 @@
 
         <table class="money">
             <tr>
-                <td><span class="k">Cantidad recibida</span><span class="v">Q{{ number_format((float) $paidAmount, 2) }}</span></td>
+                <td><span class="k">Monto total</span><span class="v">Q{{ number_format((float) $receipt->total_amount, 2) }}</span></td>
+                
                 <td><span class="k">Abono</span><span class="v">Q{{ number_format((float) $paidAmount, 2) }}</span></td>
                 <td><span class="k">Saldo</span><span class="v">Q{{ number_format((float) $saldoAmount, 2) }}</span></td>
             </tr>
