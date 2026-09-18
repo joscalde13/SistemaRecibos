@@ -111,6 +111,44 @@ test('receipt index can filter records by selected month', function () {
         ->assertDontSee('Rosa Ramos');
 });
 
+test('dashboard shows month to month comparison panel', function () {
+    $user = User::factory()->create();
+    $person = Person::query()->create([
+        'full_name' => 'Miguel Torres',
+        'registered_at' => now()->toDateString(),
+    ]);
+
+    Receipt::create([
+        'person_id' => $person->id,
+        'created_by' => $user->id,
+        'receipt_number' => 'REC-000020',
+        'issue_date' => now()->subMonth()->startOfMonth()->addDays(2)->toDateString(),
+        'concept' => 'Honorarios anteriores',
+        'total_amount' => 1000.00,
+        'abono_amount' => 600.00,
+        'saldo_amount' => 400.00,
+        'status' => Receipt::STATUS_PARTIAL,
+    ]);
+
+    Receipt::create([
+        'person_id' => $person->id,
+        'created_by' => $user->id,
+        'receipt_number' => 'REC-000021',
+        'issue_date' => now()->startOfMonth()->addDays(3)->toDateString(),
+        'concept' => 'Honorarios actuales',
+        'total_amount' => 1500.00,
+        'abono_amount' => 900.00,
+        'saldo_amount' => 600.00,
+        'status' => Receipt::STATUS_PARTIAL,
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('dashboard'))
+        ->assertOk()
+        ->assertSee('Comparativa mensual')
+        ->assertSee('vs mes anterior');
+});
+
 test('receipt export csv includes the concept column', function () {
     $user = User::factory()->create();
     $person = Person::query()->create([

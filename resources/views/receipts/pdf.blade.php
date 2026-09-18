@@ -260,8 +260,8 @@
         </div>
 
         <div class="amount-row">
-            <div class="amount-label">Monto</div>
-            <div class="amount-value">Q{{ number_format((float) $receipt->total_amount, 2) }}</div>
+            <div class="amount-label">Debe</div>
+            <div class="amount-value">Q{{ number_format((float) $saldoAmount, 2) }}</div>
         </div>
 
         <table class="fields">
