@@ -1,69 +1,72 @@
 <x-layouts::auth :title="'Registrarse'">
-    <div class="flex flex-col gap-6">
-        <x-auth-header :title="'Crear una cuenta'" :description="'Ingresa tus datos para crear tu cuenta'" />
+    <div class="mx-auto w-full max-w-md">
+        <div class="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+            <div class="mb-5 flex justify-center">
+                <img src="{{ asset('assets/logo/logo.jpeg') }}" alt="Logo" class="h-20 w-auto object-contain" />
+            </div>
 
-        <!-- Session Status -->
-        <x-auth-session-status class="text-center" :status="session('status')" />
+            <div class="mb-5 text-center">
+                <h1 class="text-2xl font-semibold text-zinc-900 dark:text-white">Crear cuenta</h1>
+                <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-400">Completa tus datos</p>
+            </div>
 
-        <form method="POST" action="{{ route('register.store') }}" class="flex flex-col gap-6">
-            @csrf
-            <!-- Name -->
-            <flux:input
-                name="name"
-                :label="'Nombre'"
-                :value="old('name')"
-                type="text"
-                required
-                autofocus
-                autocomplete="name"
-                :placeholder="'Nombre completo'"
-            />
+            <x-auth-session-status class="mb-4 text-center" :status="session('status')" />
 
-            <!-- Email Address -->
-            <flux:input
-                name="email"
-                :label="'Correo electrónico'"
-                :value="old('email')"
-                type="email"
-                required
-                autocomplete="email"
-                placeholder="correo@ejemplo.com"
-            />
+            <form method="POST" action="{{ route('register.store') }}" class="space-y-4">
+                @csrf
 
-            <!-- Password -->
-            <flux:input
-                name="password"
-                :label="'Contraseña'"
-                type="password"
-                required
-                autocomplete="new-password"
-                :placeholder="'Contraseña'"
-                passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
-                viewable
-            />
+                <flux:input
+                    name="name"
+                    :label="'Nombre'"
+                    :value="old('name')"
+                    type="text"
+                    required
+                    autofocus
+                    autocomplete="name"
+                    :placeholder="'Nombre completo'"
+                />
 
-            <!-- Confirm Password -->
-            <flux:input
-                name="password_confirmation"
-                :label="'Confirmar contraseña'"
-                type="password"
-                required
-                autocomplete="new-password"
-                :placeholder="'Confirmar contraseña'"
-                passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
-                viewable
-            />
+                <flux:input
+                    name="email"
+                    :label="'Correo electrónico'"
+                    :value="old('email')"
+                    type="email"
+                    required
+                    autocomplete="email"
+                    placeholder="correo@ejemplo.com"
+                />
 
-            <div class="flex items-center justify-end">
+                <flux:input
+                    name="password"
+                    :label="'Contraseña'"
+                    type="password"
+                    required
+                    autocomplete="new-password"
+                    :placeholder="'Contraseña'"
+                    passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
+                    viewable
+                />
+
+                <flux:input
+                    name="password_confirmation"
+                    :label="'Confirma tu contraseña'"
+                    type="password"
+                    required
+                    autocomplete="new-password"
+                    :placeholder="'Confirma tu contraseña'"
+                    passwordrules="{{ \Illuminate\Validation\Rules\Password::defaults()->toPasswordRulesString() }}"
+                    viewable
+                />
+
                 <flux:button type="submit" variant="primary" class="w-full" data-test="register-user-button">
                     Crear cuenta
                 </flux:button>
-            </div>
-        </form>
+            </form>
 
-        <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
-            <span>¿Ya tienes una cuenta?</span>
-            <flux:link :href="route('login')" wire:navigate>Iniciar sesión</flux:link>
+            <p class="mt-5 text-center text-sm text-zinc-600 dark:text-zinc-400">
+                ¿Ya tienes una cuenta?
+                <flux:link :href="route('login')" wire:navigate>Iniciar sesión</flux:link>
+            </p>
         </div>
     </div>
 </x-layouts::auth>
