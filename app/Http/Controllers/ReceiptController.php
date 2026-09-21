@@ -191,9 +191,14 @@ class ReceiptController extends Controller
     private function resolvePersonFromReceiptData(array $data): Person
     {
         $identifier = $this->normalizeIdentifier($data['person_identifier'] ?? null);
+        $name = trim((string) ($data['person_name'] ?? ''));
 
         if (! empty($data['person_id'])) {
             $person = Person::findOrFail((int) $data['person_id']);
+
+            if ($name !== '' && $person->full_name !== $name) {
+                $person->update(['full_name' => $name]);
+            }
 
             if (! $identifier && $person->identifier) {
                 $person->update(['identifier' => null]);
@@ -216,14 +221,16 @@ class ReceiptController extends Controller
             return $person;
         }
 
-        $name = trim((string) ($data['person_name'] ?? ''));
-
         if ($identifier) {
             $personByIdentifier = Person::query()
                 ->where('identifier', $identifier)
                 ->first();
 
             if ($personByIdentifier) {
+                if ($name !== '' && $personByIdentifier->full_name !== $name) {
+                    $personByIdentifier->update(['full_name' => $name]);
+                }
+
                 return $personByIdentifier;
             }
 

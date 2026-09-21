@@ -1,4 +1,8 @@
 <x-layouts::app :title="__('Detalle de recibo')">
+    @php
+        $formatMoney = static fn (float $amount): string => rtrim(rtrim(number_format($amount, 2, '.', ','), '0'), '.');
+    @endphp
+
     <div class="mx-auto w-full max-w-6xl p-4 md:p-6">
         @include('partials.flash')
 
@@ -49,15 +53,15 @@
             <div class="mt-5 grid gap-4 md:grid-cols-3">
                 <div class="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800">
                     <p class="text-xs uppercase text-zinc-500">Monto</p>
-                    <p class="mt-1 font-semibold">Q{{ number_format((float) $receipt->total_amount, 2) }}</p>
+                    <p class="mt-1 font-semibold">Q{{ $formatMoney((float) $receipt->total_amount) }}</p>
                 </div>
                 <div class="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800">
                     <p class="text-xs uppercase text-zinc-500">Cuanto abono</p>
-                    <p class="mt-1 font-semibold">Q{{ number_format($paidAmount, 2) }}</p>
+                    <p class="mt-1 font-semibold">Q{{ $formatMoney((float) $paidAmount) }}</p>
                 </div>
                 <div class="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800">
                     <p class="text-xs uppercase text-zinc-500">Saldo pendiente</p>
-                    <p class="mt-1 font-semibold">Q{{ number_format($balanceAmount, 2) }}</p>
+                    <p class="mt-1 font-semibold">Q{{ $formatMoney((float) $balanceAmount) }}</p>
                 </div>
             </div>
 

@@ -22,15 +22,15 @@
     </div>
     <div>
         <label class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200">Monto total (Q)</label>
-        <input id="total_amount" name="total_amount" type="number" step="0.01" min="0.01" value="{{ old('total_amount', $receipt->total_amount ?? '') }}" required class="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm" />
+        <input id="total_amount" name="total_amount" type="number" step="0.01" min="0.01" value="{{ old('total_amount', isset($receipt) && $receipt->total_amount !== null ? rtrim(rtrim(number_format((float) $receipt->total_amount, 2, '.', ''), '0'), '.') : '') }}" required class="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm" />
     </div>
     <div>
         <label class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200">Abono (Q)</label>
-        <input id="abono_amount" name="abono_amount" type="number" step="0.01" min="0" value="{{ old('abono_amount', $receipt->abono_amount ?? 0) }}" class="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm" />
+        <input id="abono_amount" name="abono_amount" type="number" step="0.01" min="0" value="{{ old('abono_amount', isset($receipt) && $receipt->abono_amount !== null ? rtrim(rtrim(number_format((float) $receipt->abono_amount, 2, '.', ''), '0'), '.') : 0) }}" class="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm" />
     </div>
     <div>
         <label class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200">Saldo (Q)</label>
-        <input id="saldo_amount" name="saldo_amount" type="number" step="0.01" min="0" value="{{ old('saldo_amount', $receipt->saldo_amount ?? 0) }}" placeholder="Ingrese saldo manual" class="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm" />
+        <input id="saldo_amount" name="saldo_amount" type="number" step="0.01" min="0" value="{{ old('saldo_amount', isset($receipt) && $receipt->saldo_amount !== null ? rtrim(rtrim(number_format((float) $receipt->saldo_amount, 2, '.', ''), '0'), '.') : 0) }}" placeholder="Ingrese saldo manual" class="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm" />
     </div>
     <div class="md:col-span-2">
         <label class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200">Concepto</label>

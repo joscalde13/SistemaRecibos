@@ -234,6 +234,7 @@
 
         $debeAmount = (float) ($receipt->total_amount ?? 0);
         $saldoAmount = (float) ($receipt->saldo_amount ?? 0);
+        $formatMoney = static fn (float $amount): string => rtrim(rtrim(number_format($amount, 2, '.', ','), '0'), '.');
     @endphp
 
     <div class="page">
@@ -261,7 +262,7 @@
 
         <div class="amount-row">
             <div class="amount-label">Cantidad recibida</div>
-            <div class="amount-value">Q{{ number_format((float) $paidAmount, 2) }}</div>
+            <div class="amount-value">Q{{ $formatMoney((float) $paidAmount) }}</div>
         </div>
 
         <table class="fields">
@@ -281,10 +282,10 @@
 
         <table class="money">
             <tr>
-                <td><span class="k">Monto total</span><span class="v">Q{{ number_format((float) $receipt->total_amount, 2) }}</span></td>
+                <td><span class="k">Monto total</span><span class="v">Q{{ $formatMoney((float) $receipt->total_amount) }}</span></td>
                 
-                <td><span class="k">Abono</span><span class="v">Q{{ number_format((float) $paidAmount, 2) }}</span></td>
-                <td><span class="k">Saldo</span><span class="v">Q{{ number_format((float) $saldoAmount, 2) }}</span></td>
+                <td><span class="k">Abono</span><span class="v">Q{{ $formatMoney((float) $paidAmount) }}</span></td>
+                <td><span class="k">Saldo</span><span class="v">Q{{ $formatMoney((float) $saldoAmount) }}</span></td>
             </tr>
         </table>
 
