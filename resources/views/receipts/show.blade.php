@@ -34,7 +34,7 @@
                 </div>
                 <div>
                     <p class="text-sm text-zinc-500">NIT</p>
-                    <p class="font-semibold text-zinc-900 dark:text-zinc-100">{{ $receipt->person->identifier ?: '-' }}</p>
+                    <p class="font-semibold text-zinc-900 dark:text-zinc-100">{{ filled(trim((string) ($receipt->person->identifier ?? ''))) ? trim((string) $receipt->person->identifier) : 'C/F' }}</p>
                 </div>
                 <div>
                     <p class="text-sm text-zinc-500">Fecha</p>

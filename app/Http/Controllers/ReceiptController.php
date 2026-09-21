@@ -163,6 +163,10 @@ class ReceiptController extends Controller
 
         $data = $request->validated();
 
+        if (empty($data['person_id'])) {
+            $data['person_id'] = $receipt->person_id;
+        }
+
         $person = $this->resolvePersonFromReceiptData($data);
 
         $receipt->update([
@@ -191,7 +195,13 @@ class ReceiptController extends Controller
         if (! empty($data['person_id'])) {
             $person = Person::findOrFail((int) $data['person_id']);
 
-            if (! $person->identifier && $identifier) {
+            if (! $identifier && $person->identifier) {
+                $person->update(['identifier' => null]);
+
+                return $person;
+            }
+
+            if ($identifier && $person->identifier !== $identifier) {
                 $personByIdentifier = Person::query()
                     ->where('identifier', $identifier)
                     ->first();
@@ -250,7 +260,12 @@ class ReceiptController extends Controller
             return null;
         }
 
-        $normalized = preg_replace('/\s+/', '', trim($identifier));
+        $normalized = strtoupper(trim($identifier));
+        $normalized = preg_replace('/\s+/', '', $normalized);
+
+        if ($normalized === '' || $normalized === 'CF' || $normalized === 'C/F') {
+            return null;
+        }
 
         return $normalized !== '' ? $normalized : null;
     }

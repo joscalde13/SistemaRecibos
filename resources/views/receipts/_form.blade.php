@@ -1,5 +1,7 @@
 @csrf
 
+<input type="hidden" name="person_id" value="{{ old('person_id', $receipt->person_id ?? '') }}" />
+
 <div class="grid gap-4 md:grid-cols-2">
     <div>
         <label class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200">Recibimos de (nombre)</label>

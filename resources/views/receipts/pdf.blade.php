@@ -269,7 +269,7 @@
                 <td colspan="2"><span class="label">Cliente:</span> <strong>{{ $receipt->person->full_name }}</strong></td>
             </tr>
             <tr>
-                <td colspan="2"><span class="label">NIT:</span> {{ $receipt->person->identifier ?: '-' }}</td>
+                <td colspan="2"><span class="label">NIT:</span> {{ filled(trim((string) ($receipt->person->identifier ?? ''))) ? trim((string) $receipt->person->identifier) : 'C/F' }}</td>
             </tr>
             <tr>
                 <td colspan="2"><span class="label">Cantidad:</span> {{ $amountInWords }}</td>
