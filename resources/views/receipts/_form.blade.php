@@ -11,7 +11,7 @@
         </datalist>
     </div>
     <div>
-        <label class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200">DPI / identificacion (opcional)</label>
+        <label class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200">NIT (opcional)</label>
         <input id="person_identifier" name="person_identifier" value="{{ old('person_identifier', $receipt->person->identifier ?? '') }}" class="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm" />
     </div>
     <div>

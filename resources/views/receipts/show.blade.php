@@ -33,7 +33,7 @@
                     <p class="font-semibold text-zinc-900 dark:text-zinc-100">{{ $receipt->receipt_number }}</p>
                 </div>
                 <div>
-                    <p class="text-sm text-zinc-500">DPI / identificacion</p>
+                    <p class="text-sm text-zinc-500">NIT</p>
                     <p class="font-semibold text-zinc-900 dark:text-zinc-100">{{ $receipt->person->identifier ?: '-' }}</p>
                 </div>
                 <div>
@@ -46,13 +46,9 @@
                 </div>
             </div>
 
-            <div class="mt-5 grid gap-4 md:grid-cols-4">
+            <div class="mt-5 grid gap-4 md:grid-cols-3">
                 <div class="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800">
                     <p class="text-xs uppercase text-zinc-500">Monto</p>
-                    <p class="mt-1 font-semibold">Q{{ number_format((float) $receipt->total_amount, 2) }}</p>
-                </div>
-                <div class="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800">
-                    <p class="text-xs uppercase text-zinc-500">Cuanto debe</p>
                     <p class="mt-1 font-semibold">Q{{ number_format((float) $receipt->total_amount, 2) }}</p>
                 </div>
                 <div class="rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800">

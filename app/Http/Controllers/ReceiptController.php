@@ -88,28 +88,7 @@ class ReceiptController extends Controller
         $receipt = DB::transaction(function () use ($request): Receipt {
             $number = $this->receiptNumberService->next();
             $data = $request->validated();
-
-            $person = null;
-
-            if (! empty($data['person_id'])) {
-                $person = Person::findOrFail((int) $data['person_id']);
-
-                if (! $person->identifier && ! empty($data['person_identifier'])) {
-                    $person->update(['identifier' => $data['person_identifier']]);
-                }
-            } else {
-                $person = Person::firstOrCreate(
-                    ['full_name' => $data['person_name']],
-                    [
-                        'identifier' => $data['person_identifier'] ?? null,
-                        'registered_at' => now()->toDateString(),
-                    ],
-                );
-
-                if (! $person->identifier && ! empty($data['person_identifier'])) {
-                    $person->update(['identifier' => $data['person_identifier']]);
-                }
-            }
+            $person = $this->resolvePersonFromReceiptData($data);
 
             return Receipt::create([
                 'person_id' => $person->id,
@@ -184,27 +163,7 @@ class ReceiptController extends Controller
 
         $data = $request->validated();
 
-        $person = null;
-
-        if (! empty($data['person_id'])) {
-            $person = Person::findOrFail((int) $data['person_id']);
-
-            if (! $person->identifier && ! empty($data['person_identifier'])) {
-                $person->update(['identifier' => $data['person_identifier']]);
-            }
-        } else {
-            $person = Person::firstOrCreate(
-                ['full_name' => $data['person_name']],
-                [
-                    'identifier' => $data['person_identifier'] ?? null,
-                    'registered_at' => now()->toDateString(),
-                ],
-            );
-
-            if (! $person->identifier && ! empty($data['person_identifier'])) {
-                $person->update(['identifier' => $data['person_identifier']]);
-            }
-        }
+        $person = $this->resolvePersonFromReceiptData($data);
 
         $receipt->update([
             'person_id' => $person->id,
@@ -220,6 +179,80 @@ class ReceiptController extends Controller
         return redirect()
             ->route('receipts.show', $receipt)
             ->with('status', 'Recibo actualizado correctamente.');
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function resolvePersonFromReceiptData(array $data): Person
+    {
+        $identifier = $this->normalizeIdentifier($data['person_identifier'] ?? null);
+
+        if (! empty($data['person_id'])) {
+            $person = Person::findOrFail((int) $data['person_id']);
+
+            if (! $person->identifier && $identifier) {
+                $personByIdentifier = Person::query()
+                    ->where('identifier', $identifier)
+                    ->first();
+
+                if ($personByIdentifier && $personByIdentifier->id !== $person->id) {
+                    return $personByIdentifier;
+                }
+
+                $person->update(['identifier' => $identifier]);
+            }
+
+            return $person;
+        }
+
+        $name = trim((string) ($data['person_name'] ?? ''));
+
+        if ($identifier) {
+            $personByIdentifier = Person::query()
+                ->where('identifier', $identifier)
+                ->first();
+
+            if ($personByIdentifier) {
+                return $personByIdentifier;
+            }
+
+            $personWithoutIdentifier = Person::query()
+                ->where('full_name', $name)
+                ->whereNull('identifier')
+                ->latest('id')
+                ->first();
+
+            if ($personWithoutIdentifier) {
+                $personWithoutIdentifier->update(['identifier' => $identifier]);
+
+                return $personWithoutIdentifier;
+            }
+
+            return Person::create([
+                'full_name' => $name,
+                'identifier' => $identifier,
+                'registered_at' => now()->toDateString(),
+            ]);
+        }
+
+        return Person::firstOrCreate(
+            ['full_name' => $name],
+            [
+                'registered_at' => now()->toDateString(),
+            ],
+        );
+    }
+
+    private function normalizeIdentifier(mixed $identifier): ?string
+    {
+        if (! is_string($identifier)) {
+            return null;
+        }
+
+        $normalized = preg_replace('/\s+/', '', trim($identifier));
+
+        return $normalized !== '' ? $normalized : null;
     }
 
     public function destroy(Receipt $receipt): RedirectResponse
