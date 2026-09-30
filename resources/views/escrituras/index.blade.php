@@ -62,7 +62,7 @@
                             <td class="px-4 py-3">{{ $escritura->delivery_date?->format('d/m/Y') ?: '-' }}</td>
                             <td class="px-4 py-3">
                                 @php($label = $statuses[$escritura->status] ?? $escritura->status)
-                                <span class="rounded-full px-2.5 py-1 text-xs font-semibold {{ $escritura->status === \App\Models\Escritura::STATUS_DELIVERED ? 'bg-emerald-100 text-emerald-700' : ($escritura->status === \App\Models\Escritura::STATUS_PENDING_DELIVERY ? 'bg-sky-100 text-sky-700' : ($escritura->status === \App\Models\Escritura::STATUS_PENDING_REGISTRY ? 'bg-amber-100 text-amber-700' : 'bg-rose-100 text-rose-700')) }}">{{ $label }}</span>
+                                <span class="text-xs font-semibold {{ $escritura->status === \App\Models\Escritura::STATUS_DELIVERED ? 'text-emerald-700' : ($escritura->status === \App\Models\Escritura::STATUS_PENDING_DELIVERY ? 'text-sky-700' : ($escritura->status === \App\Models\Escritura::STATUS_PENDING_REGISTRY ? 'text-amber-700' : 'text-rose-700')) }}">{{ $label }}</span>
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center gap-3">
