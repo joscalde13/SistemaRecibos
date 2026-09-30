@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EscrituraController;
 use App\Http\Controllers\ReceiptController;
 use Illuminate\Support\Facades\Route;
 
@@ -9,6 +10,7 @@ Route::redirect('/', '/login')->name('home');
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    Route::resource('escrituras', EscrituraController::class);
     Route::resource('receipts', ReceiptController::class);
     Route::patch('receipts/{receipt}/void', [ReceiptController::class, 'void'])->name('receipts.void');
     Route::get('receipts/export/excel', [ReceiptController::class, 'exportExcel'])->name('receipts.export.excel');

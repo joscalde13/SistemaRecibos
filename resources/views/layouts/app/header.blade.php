@@ -56,6 +56,12 @@
                     <flux:sidebar.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
                         Panel
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="archive-box" :href="route('escrituras.index')" :current="request()->routeIs('escrituras.*')">
+                        Escrituras
+                    </flux:sidebar.item>
+                    <flux:sidebar.item icon="document-text" :href="route('receipts.index')" :current="request()->routeIs('receipts.*')">
+                        Recibos
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 
