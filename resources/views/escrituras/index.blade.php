@@ -66,6 +66,7 @@
                             </td>
                             <td class="px-4 py-3">
                                 <div class="flex items-center gap-3">
+                                    <a href="{{ route('escrituras.show', $escritura) }}" class="text-slate-700 hover:underline">Ver</a>
                                     <a href="{{ route('escrituras.edit', $escritura) }}" class="text-amber-700 hover:underline">Editar</a>
                                     <form method="POST" action="{{ route('escrituras.destroy', $escritura) }}" onsubmit="return confirm('Deseas eliminar esta escritura?');">
                                         @csrf
