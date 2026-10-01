@@ -19,6 +19,7 @@ test('a escritura is stored as pending send registry by default when no follow-u
     $response = $this->actingAs($user)->post(route('escrituras.store'), [
         'client_name' => 'Cliente Prueba',
         'escritura_number' => 'ESC-001',
+        'telefono' => '502 1234-5678',
         'entry_date' => '2026-09-30',
         'registry_received_date' => null,
         'delivery_date' => null,
@@ -31,6 +32,7 @@ test('a escritura is stored as pending send registry by default when no follow-u
     $this->assertDatabaseHas('escrituras', [
         'client_name' => 'Cliente Prueba',
         'escritura_number' => 'ESC-001',
+        'telefono' => '502 1234-5678',
         'status' => Escritura::STATUS_PENDING_SEND_REGISTRY,
     ]);
 });

@@ -20,6 +20,7 @@ class StoreEscrituraRequest extends FormRequest
     {
         return [
             'client_name' => ['required', 'string', 'max:255'],
+            'telefono' => ['nullable', 'string', 'max:30'],
             'escritura_number' => ['required', 'string', 'max:100', 'unique:escrituras,escritura_number'],
             'entry_date' => ['required', 'date'],
             'registry_received_date' => ['nullable', 'date', 'after_or_equal:entry_date'],

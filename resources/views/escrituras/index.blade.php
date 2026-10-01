@@ -44,6 +44,7 @@
                 <thead class="bg-zinc-50 text-left text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
                     <tr>
                         <th class="px-4 py-3">Cliente</th>
+                        <th class="px-4 py-3">Teléfono</th>
                         <th class="px-4 py-3">No. escritura</th>
                         <th class="px-4 py-3">Fecha de creación de la escritura</th>
                         <th class="px-4 py-3">Fecha recibida del registro</th>
@@ -56,6 +57,7 @@
                     @forelse($escrituras as $escritura)
                         <tr class="border-t border-zinc-100 dark:border-zinc-800">
                             <td class="px-4 py-3 font-medium text-zinc-800 dark:text-zinc-100">{{ $escritura->client_name }}</td>
+                            <td class="px-4 py-3">{{ $escritura->telefono ?: '-' }}</td>
                             <td class="px-4 py-3">{{ $escritura->escritura_number }}</td>
                             <td class="px-4 py-3">{{ $escritura->entry_date?->format('d/m/Y') }}</td>
                             <td class="px-4 py-3">{{ $escritura->registry_received_date?->format('d/m/Y') ?: '-' }}</td>
@@ -77,7 +79,7 @@
                             </td>
                         </tr>
                     @empty
-                        <tr><td class="px-4 py-5 text-zinc-500" colspan="7">No hay escrituras registradas.</td></tr>
+                        <tr><td class="px-4 py-5 text-zinc-500" colspan="8">No hay escrituras registradas.</td></tr>
                     @endforelse
                 </tbody>
             </table>

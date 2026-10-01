@@ -5,6 +5,11 @@
     </div>
 
     <div>
+        <label class="mb-1 block text-sm font-medium text-zinc-700">Número de teléfono</label>
+        <input name="telefono" value="{{ old('telefono', $escritura->telefono ?? '') }}" placeholder="" class="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm" />
+    </div>
+
+    <div>
         <label class="mb-1 block text-sm font-medium text-zinc-700">Numero de escritura</label>
         <input name="escritura_number" value="{{ old('escritura_number', $escritura->escritura_number ?? '') }}" required class="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm" />
     </div>

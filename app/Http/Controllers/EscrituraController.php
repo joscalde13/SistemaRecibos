@@ -21,6 +21,7 @@ class EscrituraController extends Controller
             ->when($search !== '', function ($query) use ($search): void {
                 $query->where(function ($inner) use ($search): void {
                     $inner->where('client_name', 'like', "%{$search}%")
+                        ->orWhere('telefono', 'like', "%{$search}%")
                         ->orWhere('escritura_number', 'like', "%{$search}%");
                 });
             })

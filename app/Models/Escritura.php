@@ -19,6 +19,7 @@ class Escritura extends Model
      */
     protected $fillable = [
         'client_name',
+        'telefono',
         'escritura_number',
         'entry_date',
         'registry_received_date',

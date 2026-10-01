@@ -18,6 +18,7 @@
                 <h2 class="mb-4 text-sm font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-300">Datos principales</h2>
                 <dl class="grid gap-3 text-sm text-zinc-700 dark:text-zinc-200">
                     <div class="flex items-center justify-between gap-4"><dt class="font-medium">Nombre del cliente</dt><dd>{{ $escritura->client_name }}</dd></div>
+                    <div class="flex items-center justify-between gap-4"><dt class="font-medium">Teléfono</dt><dd>{{ $escritura->telefono ?: '-' }}</dd></div>
                     <div class="flex items-center justify-between gap-4"><dt class="font-medium">No. escritura</dt><dd>{{ $escritura->escritura_number }}</dd></div>
                     <div class="flex items-center justify-between gap-4"><dt class="font-medium">Estado</dt><dd>{{ $statuses[$escritura->status] ?? $escritura->status }}</dd></div>
                 </dl>
