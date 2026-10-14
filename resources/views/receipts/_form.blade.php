@@ -18,7 +18,7 @@
     </div>
     <div class="min-w-0">
         <label class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200">Fecha</label>
-        <input name="issue_date" type="date" value="{{ old('issue_date', isset($receipt) && $receipt->issue_date ? $receipt->issue_date->format('Y-m-d') : now()->format('Y-m-d')) }}" required class="w-full min-w-0 max-w-full appearance-none rounded-lg border border-zinc-300 px-3 py-2 text-sm" style="min-width:0;" />
+        <input name="issue_date" type="date" value="{{ old('issue_date', isset($receipt) && $receipt->issue_date ? $receipt->issue_date->format('Y-m-d') : now()->format('Y-m-d')) }}" required class="w-full min-w-0 max-w-full appearance-none rounded-lg border border-zinc-300 px-3 py-2 text-base" style="min-width:0;" />
     </div>
     <div>
         <label class="mb-1 block text-sm font-medium text-zinc-700 dark:text-zinc-200">Monto total (Q)</label>

@@ -45,6 +45,19 @@
     ::file-selector-button {
         border-color: var(--color-gray-200, currentColor);
     }
+
+    input[type='date'],
+    input[type='datetime-local'],
+    input[type='month'],
+    input[type='time'] {
+        min-width: 0;
+        max-width: 100%;
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 16px;
+        -webkit-appearance: none;
+        appearance: none;
+    }
 }
 
 [data-flux-field]:not(ui-radio, ui-checkbox) {
