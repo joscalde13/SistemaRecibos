@@ -126,3 +126,53 @@ test('a escritura is marked as delivered when delivery date is provided', functi
 
     expect($escritura->delivery_date?->format('Y-m-d'))->toBe('2026-09-22');
 });
+
+test('escritura export csv includes the main fields', function () {
+    $user = User::factory()->create();
+
+    Escritura::create([
+        'client_name' => 'Ana López',
+        'telefono' => '502 2233-4455',
+        'escritura_number' => 'ESC-EXP-001',
+        'entry_date' => '2026-09-30',
+        'registry_received_date' => '2026-10-02',
+        'delivery_date' => '2026-10-05',
+        'status' => Escritura::STATUS_DELIVERED,
+        'notes' => 'Escritura exportada',
+    ]);
+
+    $response = $this->actingAs($user)->get(route('escrituras.export.excel'));
+
+    $response->assertOk();
+
+    ob_start();
+    $response->sendContent();
+    $content = ob_get_clean();
+
+    expect($content)
+        ->toContain('Cliente')
+        ->toContain('Ana López')
+        ->toContain('ESC-EXP-001');
+});
+
+test('escritura export pdf includes the main fields', function () {
+    $user = User::factory()->create();
+
+    $escritura = Escritura::create([
+        'client_name' => 'Carlos Pérez',
+        'telefono' => '502 1234-9876',
+        'escritura_number' => 'ESC-EXP-002',
+        'entry_date' => '2026-09-30',
+        'registry_received_date' => '2026-10-02',
+        'delivery_date' => '2026-10-05',
+        'status' => Escritura::STATUS_DELIVERED,
+        'notes' => 'Escritura revisada',
+    ]);
+
+    $html = view('escrituras.export-pdf', ['escrituras' => [$escritura]])->render();
+
+    expect($html)
+        ->toContain('<th>Cliente</th>')
+        ->toContain('Carlos Pérez')
+        ->toContain('ESC-EXP-002');
+});

@@ -4,7 +4,11 @@
 
         <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
             <h1 class="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">Escrituras</h1>
-            <a href="{{ route('escrituras.create') }}" class="rounded-lg bg-slate-800 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700">Nueva escritura</a>
+            <div class="flex flex-wrap items-center gap-2">
+                <a href="{{ route('escrituras.export.excel', request()->query()) }}" class="rounded-lg border border-emerald-300 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100 hover:text-emerald-800">Exportar Excel</a>
+                <a href="{{ route('escrituras.export.pdf', request()->query()) }}" class="rounded-lg border border-red-300 bg-red-50 px-4 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-100 hover:text-red-800">Exportar PDF</a>
+                <a href="{{ route('escrituras.create') }}" class="rounded-lg bg-slate-800 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700">Nueva escritura</a>
+            </div>
         </div>
 
         <div class="mb-4 grid gap-3 md:grid-cols-2 xl:grid-cols-4">

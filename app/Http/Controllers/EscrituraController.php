@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreEscrituraRequest;
 use App\Http\Requests\UpdateEscrituraRequest;
 use App\Models\Escritura;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -103,6 +104,71 @@ class EscrituraController extends Controller
         return redirect()
             ->route('escrituras.index')
             ->with('status', 'Escritura eliminada correctamente.');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $escrituras = $this->filteredQuery($request)->get();
+        $filename = 'escrituras-'.now()->format('Ymd-His').'.csv';
+
+        return response()->streamDownload(function () use ($escrituras): void {
+            $handle = fopen('php://output', 'wb');
+            fputcsv($handle, ['Cliente', 'Teléfono', 'No. escritura', 'Fecha de creación', 'Fecha recibida del registro', 'Fecha de entrega', 'Estado', 'Notas']);
+
+            foreach ($escrituras as $escritura) {
+                fputcsv($handle, [
+                    $escritura->client_name ?? '',
+                    $escritura->telefono ?? '',
+                    $escritura->escritura_number ?? '',
+                    $escritura->entry_date?->format('d/m/Y') ?? '',
+                    $escritura->registry_received_date?->format('d/m/Y') ?? '',
+                    $escritura->delivery_date?->format('d/m/Y') ?? '',
+                    $escritura->status ? (Escritura::statuses()[$escritura->status] ?? $escritura->status) : '',
+                    $escritura->notes ?? '',
+                ]);
+            }
+
+            fclose($handle);
+        }, $filename, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+        ]);
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $escrituras = $this->filteredQuery($request)->get();
+
+        $pdf = Pdf::loadView('escrituras.export-pdf', [
+            'escrituras' => $escrituras,
+        ])->setPaper('letter', 'landscape');
+
+        return $pdf->download('reporte-de-escrituras.pdf');
+    }
+
+    private function filteredQuery(Request $request)
+    {
+        $search = trim((string) $request->string('search'));
+        $status = trim((string) $request->string('status'));
+
+        return Escritura::query()
+            ->when($search !== '', function ($query) use ($search): void {
+                $query->where(function ($inner) use ($search): void {
+                    $inner->where('client_name', 'like', "%{$search}%")
+                        ->orWhere('telefono', 'like', "%{$search}%")
+                        ->orWhere('escritura_number', 'like', "%{$search}%");
+                });
+            })
+            ->when($status !== '', function ($query) use ($status): void {
+                $query->where('status', $status);
+            })
+            ->orderByRaw("case when status = ? then 0 when status = ? then 1 when status = ? then 2 else 3 end", [
+                Escritura::STATUS_PENDING_SEND_REGISTRY,
+                Escritura::STATUS_PENDING_REGISTRY,
+                Escritura::STATUS_PENDING_DELIVERY,
+            ])
+            ->latest('entry_date')
+            ->latest('id');
     }
 
     /**

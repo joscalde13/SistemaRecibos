@@ -11,6 +11,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('escrituras', EscrituraController::class);
+    Route::get('escrituras/export/excel', [EscrituraController::class, 'exportExcel'])->name('escrituras.export.excel');
+    Route::get('escrituras/export/pdf', [EscrituraController::class, 'exportPdf'])->name('escrituras.export.pdf');
     Route::resource('receipts', ReceiptController::class);
     Route::patch('receipts/{receipt}/void', [ReceiptController::class, 'void'])->name('receipts.void');
     Route::get('receipts/export/excel', [ReceiptController::class, 'exportExcel'])->name('receipts.export.excel');
