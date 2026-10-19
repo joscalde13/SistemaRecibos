@@ -21,6 +21,9 @@
                     <flux:sidebar.item icon="document-text" :href="route('receipts.index')" :current="request()->routeIs('receipts.*')">
                         Recibos
                     </flux:sidebar.item>
+                    <flux:sidebar.item icon="pencil-square" :href="route('notes.index')" :current="request()->routeIs('notes.*')">
+                        Notas del día
+                    </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
 
