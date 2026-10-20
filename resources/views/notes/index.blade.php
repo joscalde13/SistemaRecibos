@@ -35,7 +35,7 @@
 
         <section class="space-y-4">
                 <form method="GET" class="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
-                    <div class="grid gap-3 md:grid-cols-[1fr_220px_auto_auto]">
+                    <div class="grid gap-3 md:grid-cols-[1fr_220px_auto_auto_auto_auto]">
                         <input
                             name="search"
                             value="{{ $search }}"
@@ -51,6 +51,12 @@
                         <button class="rounded-xl bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-zinc-800">Buscar</button>
                         <a href="{{ route('notes.index') }}" class="inline-flex items-center justify-center rounded-xl border border-zinc-300 px-4 py-2.5 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800">
                             Todas las notas
+                        </a>
+                        <a href="{{ route('notes.export.excel', request()->query()) }}" class="inline-flex items-center justify-center rounded-xl border border-emerald-300 bg-emerald-50 px-4 py-2.5 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100 hover:text-emerald-800">
+                            Excel
+                        </a>
+                        <a href="{{ route('notes.export.pdf', request()->query()) }}" class="inline-flex items-center justify-center rounded-xl border border-red-300 bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-700 transition hover:bg-red-100 hover:text-red-800">
+                            PDF
                         </a>
                     </div>
                 </form>

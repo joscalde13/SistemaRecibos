@@ -22,6 +22,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('receipts/{receipt}/pdf/download', [ReceiptController::class, 'pdfDownload'])->name('receipts.pdf.download');
 
     Route::get('notes', [NoteController::class, 'index'])->name('notes.index');
+    Route::get('notes/export/excel', [NoteController::class, 'exportExcel'])->name('notes.export.excel');
+    Route::get('notes/export/pdf', [NoteController::class, 'exportPdf'])->name('notes.export.pdf');
     Route::get('notes/{note}/edit', [NoteController::class, 'edit'])->name('notes.edit');
     Route::post('notes', [NoteController::class, 'store'])->name('notes.store');
     Route::patch('notes/{note}', [NoteController::class, 'update'])->name('notes.update');

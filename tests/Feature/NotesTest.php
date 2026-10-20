@@ -26,6 +26,38 @@ it('stores a daily note with free text content', function (): void {
     ]);
 });
 
+it('exports notes as excel', function (): void {
+    $user = User::factory()->create();
+    DailyNote::create([
+        'note_date' => '2026-10-20',
+        'content' => 'Juan Pérez, 5555-5555, revisión pendiente.',
+        'created_by' => $user->id,
+    ]);
+
+    $response = $this->actingAs($user)
+        ->get(route('notes.export.excel', ['date' => '2026-10-20']));
+
+    $response->assertOk()
+        ->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
+
+    $this->assertStringContainsString('Fecha', $response->streamedContent());
+    $this->assertStringContainsString('Juan Pérez', $response->streamedContent());
+});
+
+it('exports notes as pdf', function (): void {
+    $user = User::factory()->create();
+    DailyNote::create([
+        'note_date' => '2026-10-20',
+        'content' => 'Cliente solicita información urgente.',
+        'created_by' => $user->id,
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('notes.export.pdf', ['date' => '2026-10-20']))
+        ->assertOk()
+        ->assertDownload('reporte-de-notas.pdf');
+});
+
 it('deletes a daily note', function (): void {
     $user = User::factory()->create();
     $note = DailyNote::create([

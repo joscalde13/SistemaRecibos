@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDailyNoteRequest;
 use App\Models\DailyNote;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -15,16 +16,7 @@ class NoteController extends Controller
         $search = trim((string) $request->string('search'));
         $date = trim((string) $request->string('date'));
 
-        $notes = DailyNote::query()
-            ->with('creator')
-            ->when($search !== '', function ($query) use ($search): void {
-                $query->where('content', 'like', "%{$search}%");
-            })
-            ->when($date !== '', function ($query) use ($date): void {
-                $query->whereDate('note_date', $date);
-            })
-            ->latest('note_date')
-            ->latest('id')
+        $notes = $this->filteredQuery($request)
             ->paginate(10)
             ->withQueryString();
 
@@ -67,5 +59,60 @@ class NoteController extends Controller
         return redirect()
             ->route('notes.index')
             ->with('status', 'Nota eliminada correctamente.');
+    }
+
+    public function exportExcel(Request $request)
+    {
+        $notes = $this->filteredQuery($request)->get();
+        $filename = 'notas-'.now()->format('Ymd-His').'.csv';
+
+        return response()->streamDownload(function () use ($notes): void {
+            $handle = fopen('php://output', 'wb');
+            fputcsv($handle, ['Fecha', 'Nota']);
+
+            foreach ($notes as $note) {
+                $date = $note->note_date
+                    ? $note->note_date->locale('es')->translatedFormat('l d/m/Y')
+                    : '';
+
+                fputcsv($handle, [
+                    $date,
+                    $note->content ?? '',
+                ]);
+            }
+
+            fclose($handle);
+        }, $filename, [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
+        ]);
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $notes = $this->filteredQuery($request)->get();
+
+        $pdf = Pdf::loadView('notes.export-pdf', [
+            'notes' => $notes,
+        ])->setPaper('letter', 'landscape');
+
+        return $pdf->download('reporte-de-notas.pdf');
+    }
+
+    private function filteredQuery(Request $request)
+    {
+        $search = trim((string) $request->string('search'));
+        $date = trim((string) $request->string('date'));
+
+        return DailyNote::query()
+            ->with('creator')
+            ->when($search !== '', function ($query) use ($search): void {
+                $query->where('content', 'like', "%{$search}%");
+            })
+            ->when($date !== '', function ($query) use ($date): void {
+                $query->whereDate('note_date', $date);
+            })
+            ->latest('note_date')
+            ->latest('id');
     }
 }
