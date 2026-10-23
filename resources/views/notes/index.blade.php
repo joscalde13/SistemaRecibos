@@ -72,8 +72,7 @@
                         <article class="rounded-2xl border border-zinc-300 bg-zinc-50 p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md dark:border-zinc-700 dark:bg-zinc-900">
                             <div class="mb-4 flex flex-wrap items-start justify-between gap-3 border-b border-zinc-200 pb-4 dark:border-zinc-800">
                                 <div>
-                                    <p class="text-sm font-semibold text-slate-700 dark:text-slate-300">{{ $note->note_date?->locale('es')->translatedFormat('l d/m/Y') }}</p>
-                                   
+                                    <p class="text-sm font-semibold text-slate-700 dark:text-slate-300">{{ $note->note_date?->locale('es')->translatedFormat('l d/m/Y H:i') }}</p>
                                 </div>
 
                                 <div class="flex items-center gap-2">

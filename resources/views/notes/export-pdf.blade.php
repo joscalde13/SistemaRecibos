@@ -16,14 +16,14 @@
     <table>
         <thead>
             <tr>
-                <th>Fecha</th>
+                <th>Fecha y hora</th>
                 <th>Nota</th>
             </tr>
         </thead>
         <tbody>
             @foreach($notes as $note)
                 <tr>
-                    <td>{{ $note->note_date?->locale('es')->translatedFormat('l d/m/Y') ?? '' }}</td>
+                    <td>{{ $note->note_date?->locale('es')->translatedFormat('l d/m/Y H:i') ?? '' }}</td>
                     <td>{{ $note->content ?? '' }}</td>
                 </tr>
             @endforeach

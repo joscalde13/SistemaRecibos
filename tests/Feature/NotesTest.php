@@ -20,10 +20,12 @@ it('stores a daily note with free text content', function (): void {
         ])
         ->assertRedirect(route('notes.index'));
 
-    $this->assertDatabaseHas('daily_notes', [
-        'content' => 'Juan Pérez, 5555-5555, pidió seguimiento de su trámite.',
-        'created_by' => $user->id,
-    ]);
+    $note = DailyNote::query()->latest()->first();
+
+    $this->assertNotNull($note);
+    $this->assertSame('Juan Pérez, 5555-5555, pidió seguimiento de su trámite.', $note->content);
+    $this->assertSame($user->id, $note->created_by);
+    $this->assertNotSame('00:00:00', $note->note_date->format('H:i:s'));
 });
 
 it('exports notes as excel', function (): void {

@@ -26,7 +26,7 @@ class DailyNote extends Model
     protected function casts(): array
     {
         return [
-            'note_date' => 'date',
+            'note_date' => 'datetime',
         ];
     }
 

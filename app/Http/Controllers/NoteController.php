@@ -27,7 +27,7 @@ class NoteController extends Controller
     {
         DailyNote::create([
             'content' => $request->validated('content'),
-            'note_date' => now()->toDateString(),
+            'note_date' => now(),
             'created_by' => $request->user()?->id,
         ]);
 
@@ -68,11 +68,11 @@ class NoteController extends Controller
 
         return response()->streamDownload(function () use ($notes): void {
             $handle = fopen('php://output', 'wb');
-            fputcsv($handle, ['Fecha', 'Nota']);
+            fputcsv($handle, ['Fecha y hora', 'Nota']);
 
             foreach ($notes as $note) {
                 $date = $note->note_date
-                    ? $note->note_date->locale('es')->translatedFormat('l d/m/Y')
+                    ? $note->note_date->locale('es')->translatedFormat('l d/m/Y H:i')
                     : '';
 
                 fputcsv($handle, [
