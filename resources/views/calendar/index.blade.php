@@ -21,63 +21,84 @@
             edit(e) { this.id = e.id; this.title = e.title; this.note = e.note || ''; this.time = e.time; this.remind = e.remind; },
             action() { return this.id ? '{{ url('calendar') }}/' + this.id : '{{ route('calendar.store') }}'; }
          }">
-        <div class="mb-3 flex items-center justify-between gap-2 px-2 sm:mb-4 sm:px-0 sm:gap-3">
+        <div class="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-lg dark:border-zinc-700 dark:bg-zinc-900">
+        <div class="flex items-center justify-between gap-2 bg-linear-to-r from-zinc-900 to-slate-800 px-3 py-4 text-white sm:px-6">
+            @php $navBtn = 'flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-lg transition hover:bg-amber-400 hover:text-zinc-900'; @endphp
             @if ($prev)
-                <a href="{{ route('calendar.index', ['month' => $prev]) }}" class="rounded-lg border border-zinc-300 px-3 py-2 text-base sm:px-4 sm:text-lg dark:border-zinc-700 dark:text-zinc-200">&larr;</a>
+                <a href="{{ route('calendar.index', ['month' => $prev]) }}" class="{{ $navBtn }}">&larr;</a>
             @else
-                <span class="rounded-lg border border-zinc-200 px-3 py-2 text-base text-zinc-300 sm:px-4 sm:text-lg dark:border-zinc-800">&larr;</span>
+                <span class="{{ $navBtn }} opacity-30">&larr;</span>
             @endif
-            <form method="GET" action="{{ route('calendar.index') }}" class="flex items-center gap-2" x-data
+            <form method="GET" action="{{ route('calendar.index') }}" class="flex flex-col items-center gap-1 sm:flex-row sm:gap-2" x-data
                   x-on:change="$refs.m.value = $refs.y.value + '-' + $refs.mm.value; $el.submit()">
                 <input type="hidden" name="month" x-ref="m" value="{{ $month->format('Y-m') }}">
-                <select x-ref="mm" class="rounded-lg border border-zinc-300 px-2 py-2 text-base font-semibold sm:px-3 sm:text-lg capitalize dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100">
+                <select x-ref="mm" class="cursor-pointer rounded-lg border-0 bg-white/10 px-3 py-1.5 text-base font-semibold capitalize text-white sm:text-xl">
                     @for ($m = 1; $m <= 12; $m++)
-                        <option value="{{ sprintf('%02d', $m) }}" @selected($m === $month->month)>{{ \Carbon\Carbon::create(2000, $m, 1)->locale('es')->translatedFormat('F') }}</option>
+                        <option class="text-zinc-900" value="{{ sprintf('%02d', $m) }}" @selected($m === $month->month)>{{ \Carbon\Carbon::create(2000, $m, 1)->locale('es')->translatedFormat('F') }}</option>
                     @endfor
                 </select>
-                <select x-ref="y" class="rounded-lg border border-zinc-300 px-2 py-2 text-base font-semibold sm:px-3 sm:text-lg dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100">
+                <select x-ref="y" class="cursor-pointer rounded-lg border-0 bg-white/10 px-3 py-1.5 text-base font-semibold text-amber-300 sm:text-xl">
                     @foreach ($years as $y)
-                        <option value="{{ $y }}" @selected($y === $month->year)>{{ $y }}</option>
+                        <option class="text-zinc-900" value="{{ $y }}" @selected($y === $month->year)>{{ $y }}</option>
                     @endforeach
                 </select>
             </form>
             @if ($next)
-                <a href="{{ route('calendar.index', ['month' => $next]) }}" class="rounded-lg border border-zinc-300 px-3 py-2 text-base sm:px-4 sm:text-lg dark:border-zinc-700 dark:text-zinc-200">&rarr;</a>
+                <a href="{{ route('calendar.index', ['month' => $next]) }}" class="{{ $navBtn }}">&rarr;</a>
             @else
-                <span class="rounded-lg border border-zinc-200 px-3 py-2 text-base text-zinc-300 sm:px-4 sm:text-lg dark:border-zinc-800">&rarr;</span>
+                <span class="{{ $navBtn }} opacity-30">&rarr;</span>
             @endif
         </div>
 
         @if (session('status'))
-            <div class="mx-2 mb-4 sm:mx-0 rounded-lg bg-emerald-100 px-4 py-2 text-sm text-emerald-800">{{ session('status') }}</div>
+            <div class="m-3 rounded-lg bg-emerald-100 px-4 py-2 text-sm text-emerald-800">{{ session('status') }}</div>
         @endif
         @if ($errors->any())
-            <div class="mb-4 rounded-lg bg-red-100 px-4 py-2 text-sm text-red-800">{{ $errors->first() }}</div>
+            <div class="m-3 rounded-lg bg-red-100 px-4 py-2 text-sm text-red-800">{{ $errors->first() }}</div>
         @endif
 
-        <div class="grid grid-cols-7 gap-0.5 text-center text-sm font-bold sm:gap-2 uppercase text-zinc-500">
-            @foreach (['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'] as $d)
-                <div class="py-2"><span class="sm:hidden">{{ mb_substr($d, 0, 1) }}</span><span class="hidden sm:inline">{{ $d }}</span></div>
+        <div class="grid grid-cols-7 border-b border-zinc-200 bg-zinc-50 text-center text-xs font-bold uppercase tracking-wide text-zinc-500 sm:text-sm dark:border-zinc-700 dark:bg-zinc-800/60">
+            @foreach (['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'] as $i => $d)
+                <div class="py-2.5 {{ $i === 0 ? 'text-red-500' : '' }}"><span class="sm:hidden">{{ mb_substr($d, 0, 1) }}</span><span class="hidden sm:inline">{{ $d }}</span></div>
             @endforeach
         </div>
-        <div class="grid grid-cols-7 gap-0.5 sm:gap-2">
+        <div class="grid grid-cols-7 gap-px bg-zinc-200 dark:bg-zinc-700">
             @for ($i = 0; $i < $offset; $i++)
-                <div></div>
+                <div class="bg-zinc-50 dark:bg-zinc-900/60"></div>
             @endfor
             @for ($day = 1; $day <= $daysInMonth; $day++)
                 @php
                     $date = $month->copy()->day($day)->toDateString();
-                    $count = $events->get($date)?->count() ?? 0;
+                    $dayEvents = $events->get($date, collect());
+                    $count = $dayEvents->count();
+                    $isToday = $date === today()->toDateString();
+                    $isPast = $date < today()->toDateString();
+                    $isSunday = ($offset + $day - 1) % 7 === 0;
                 @endphp
                 <button type="button" @click="pick('{{ $date }}')"
-                    class="flex h-[4.5rem] flex-col items-center justify-between rounded-md border px-0.5 py-1.5 text-center text-lg sm:h-24 sm:rounded-lg sm:items-start sm:p-3 sm:text-left sm:text-base md:h-32 lg:h-36 text-zinc-900 transition hover:bg-amber-50 dark:text-zinc-100 dark:hover:bg-zinc-800 {{ $date === today()->toDateString() ? 'border-amber-400 bg-amber-50 dark:bg-zinc-800' : 'border-zinc-200 dark:border-zinc-700' }}">
-                    <span class="font-semibold leading-none {{ $count ? '' : 'my-auto sm:my-0' }}">{{ $day }}</span>
+                    class="group flex h-[4.5rem] flex-col items-center gap-1 bg-white px-0.5 py-1.5 transition hover:bg-amber-50 sm:h-28 sm:items-stretch sm:p-2 lg:h-36 dark:bg-zinc-900 dark:hover:bg-zinc-800 {{ $isPast ? 'opacity-60' : '' }}">
+                    <span class="flex h-7 w-7 items-center justify-center rounded-full text-base font-semibold sm:h-8 sm:w-8 sm:text-lg {{ $isToday ? 'bg-amber-400 text-zinc-900 shadow' : ($isSunday ? 'text-red-500' : 'text-zinc-800 dark:text-zinc-100') }}">{{ $day }}</span>
                     @if ($count)
-                        <span class="flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-400 px-1 text-xs font-bold leading-none text-zinc-900 sm:hidden">{{ $count }}</span>
-                        <span class="sm:mt-auto hidden rounded-full bg-amber-400 px-2 py-0.5 text-xs font-semibold text-zinc-900 sm:inline">{{ $count }} {{ $count === 1 ? 'evento' : 'eventos' }}</span>
+                        <span class="flex items-center gap-0.5 sm:hidden">
+                            @foreach ($dayEvents->take(3) as $e)
+                                <span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>
+                            @endforeach
+                        </span>
+                        <span class="hidden w-full flex-col gap-1 text-left sm:flex">
+                            @foreach ($dayEvents->take(2) as $e)
+                                <span class="truncate rounded-md bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-900 dark:bg-amber-500/20 dark:text-amber-200">{{ $e->title }}</span>
+                            @endforeach
+                            @if ($count > 2)
+                                <span class="px-1 text-xs font-semibold text-zinc-500">+{{ $count - 2 }} más</span>
+                            @endif
+                        </span>
                     @endif
                 </button>
             @endfor
+            @for ($i = ($offset + $daysInMonth) % 7; $i > 0 && $i < 7; $i++)
+                <div class="bg-zinc-50 dark:bg-zinc-900/60"></div>
+            @endfor
+        </div>
         </div>
 
         <div x-show="open" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-3 sm:p-4" @keydown.escape.window="open = false">
