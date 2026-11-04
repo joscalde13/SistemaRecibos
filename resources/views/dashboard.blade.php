@@ -10,6 +10,30 @@
             </div>
         </div>
 
+        @if ($upcomingEvents->isNotEmpty())
+            <div class="mb-6 rounded-2xl border border-amber-300 bg-amber-50 p-4 shadow-sm dark:border-amber-700 dark:bg-amber-950/40">
+                <div class="mb-2 flex items-center justify-between">
+                    <h2 class="text-sm font-semibold text-amber-900 dark:text-amber-200">Próximos eventos del calendario</h2>
+                    <a href="{{ route('calendar.index') }}" class="text-xs font-semibold text-amber-800 underline dark:text-amber-300">Ver calendario</a>
+                </div>
+                <ul class="space-y-2">
+                    @foreach ($upcomingEvents as $event)
+                        @php($days = (int) today()->diffInDays($event->event_date, false))
+                        <li class="flex flex-wrap items-center justify-between gap-2 rounded-lg bg-white px-3 py-2 text-sm dark:bg-zinc-900">
+                            <div>
+                                <p class="font-semibold text-zinc-900 dark:text-zinc-100">{{ $event->title }}</p>
+                                @if ($event->note)<p class="text-xs text-zinc-500">{{ \Illuminate\Support\Str::limit($event->note, 120) }}</p>@endif
+                            </div>
+                            <div class="text-right text-xs">
+                                <p class="font-medium text-zinc-700 dark:text-zinc-300">{{ $event->event_date->format('d/m/Y') }} {{ $event->event_time ? substr($event->event_time, 0, 5) : '' }}</p>
+                                <p class="{{ $days <= 1 ? 'text-red-600' : 'text-amber-700' }} font-semibold">{{ $days === 0 ? 'Hoy' : ($days === 1 ? 'Mañana' : "En {$days} días") }}</p>
+                            </div>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-5">
             <div class="min-w-0 overflow-hidden rounded-xl border border-zinc-200 bg-white p-3 shadow-sm sm:p-4 dark:border-zinc-700 dark:bg-zinc-900">
                 <p class="text-[10px] font-medium uppercase tracking-wide text-zinc-500 sm:text-xs">Recibos emitidos</p>

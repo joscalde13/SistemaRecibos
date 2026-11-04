@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CalendarEvent;
 use App\Models\Person;
 use App\Models\Receipt;
 
@@ -75,6 +76,7 @@ class DashboardController extends Controller
         }, $comparisonMetrics);
 
         return view('dashboard', [
+            'upcomingEvents' => CalendarEvent::dueSoon()->orderBy('event_date')->orderBy('event_time')->get(),
             'totalReceipts' => Receipt::count(),
             'totalAmount' => (float) $receipts->sum('total_amount'),
             'totalReceived' => (float) $totalRecibido,

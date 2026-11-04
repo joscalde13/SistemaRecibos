@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EscrituraController;
 use App\Http\Controllers\NoteController;
@@ -20,6 +21,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('receipts/export/pdf', [ReceiptController::class, 'exportPdf'])->name('receipts.export.pdf');
     Route::get('receipts/{receipt}/pdf', [ReceiptController::class, 'pdf'])->name('receipts.pdf');
     Route::get('receipts/{receipt}/pdf/download', [ReceiptController::class, 'pdfDownload'])->name('receipts.pdf.download');
+
+    Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
+    Route::post('calendar', [CalendarController::class, 'store'])->name('calendar.store');
+    Route::patch('calendar/{event}', [CalendarController::class, 'update'])->name('calendar.update');
+    Route::delete('calendar/{event}', [CalendarController::class, 'destroy'])->name('calendar.destroy');
 
     Route::get('notes', [NoteController::class, 'index'])->name('notes.index');
     Route::get('notes/export/excel', [NoteController::class, 'exportExcel'])->name('notes.export.excel');
